@@ -16,26 +16,26 @@ function $Promise(executor) {
     return true;
 };
 
-$Promise.prototype._internalResolve = function(data) {
+$Promise.prototype._internalResolve = function (data) {
     if (this._state === 'pending') {
 
         this._state = 'fulfilled';
         this._value = data;
-        // this._callHandlers();
+        this._callHandlers();
     }
 };
 
-$Promise.prototype._internalReject = function(data) {
+$Promise.prototype._internalReject = function (data) {
     if (this._state === 'pending') {
 
         this._state = 'rejected';
         this._value = data;
-        // this._callHandlers();
+        this._callHandlers();
     }
 
 };
 
-$Promise.prototype.then = function(success, error) {
+$Promise.prototype.then = function (success, error) {
     var successCb, errorCb;
     // var newPromise = new $Promise();
     if (typeof success === 'function') {
@@ -48,28 +48,48 @@ $Promise.prototype.then = function(success, error) {
     } else {
         errorCb = null;
     }
-    this._handlerGroups.push({ successCb:successCb , errorCb:errorCb });
+    var downstreamPromise = new $Promise(()=>{});
+    this._handlerGroups.push({successCb: successCb, errorCb: errorCb, downstreamPromise});
 
-     this._callHandlers();
+    this._callHandlers();
 
 };
 
-$Promise.prototype._callHandlers = function (){
+
+$Promise.prototype.catch = function (error) {
+    this.then(null,error);
+
+};
+
+$Promise.prototype._callHandlers = function () {
+
     if (this._state === 'pending') return
+    if (this._handlerGroups) {
+        this._handlerGroups.forEach(handler => {
+            if(this._state === 'fulfilled')
+             {
+                if (typeof handler.successCb === 'function') {
+                handler.successCb(this._value)
+                }
+                else{
+                    handler.downstreamPromise._internalResolve(this._value)
+                }
+            };
 
-    this._handlerGroups.forEach(handler => {
+              if(this._state === 'rejected')
+            {
+            if (typeof handler.errorCb === 'function') {
+                handler.errorCb(this._value)
+            }
+            }
+    })
+        ;
+    }
 
-        const {successCb, errorC} = handler
-
-        if (this._state === 'fulfilled')
-    {
-
-        // 1. Fulfilled, no success handler
-        if (typeof successCb === 'function') {
-            successCb(this._value)
-        }
-    }})
+    this._handlerGroups = [];
 };
+
+
 /*-------------------------------------------------------
 The spec was designed to work with Test'Em, so we don't
 actually use module.exports. But here it is for reference:
