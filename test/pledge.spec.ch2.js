@@ -87,7 +87,7 @@ describe('A promise', function(){
 
   describe('that is not yet fulfilled', function(){
 
-    xit('does not call any success handlers yet', function(){
+    it('does not call any success handlers yet', function(){
       promiseForNum.then( setFoo10 );
       expect( setFoo10 ).not.toHaveBeenCalled();
     });
@@ -102,17 +102,17 @@ describe('A promise', function(){
 
     // Recommended: add a `._callHandlers` method to your promise prototype.
 
-    xit('calls a success handler added by `.then`', function(){
+    it('calls a success handler added by `.then`', function(){
       promiseForNum.then( setFoo10 );
       expect( setFoo10 ).toHaveBeenCalled();
     });
 
-    xit("calls a success handler by passing in the promise's value", function(){
+    it("calls a success handler by passing in the promise's value", function(){
       promiseForNum.then( addToFoo );
       expect( addToFoo ).toHaveBeenCalledWith( 25 );
     });
 
-    xit('calls each success handler once per attachment', function(){
+    it('calls each success handler once per attachment', function(){
       promiseForNum.then( setFoo10 );
       promiseForNum.then( addToFoo );
       promiseForNum.then( addToFoo );

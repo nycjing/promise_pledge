@@ -21,7 +21,7 @@ $Promise.prototype._internalResolve = function(data) {
 
         this._state = 'fulfilled';
         this._value = data;
-
+        // this._callHandlers();
     }
 };
 
@@ -30,13 +30,14 @@ $Promise.prototype._internalReject = function(data) {
 
         this._state = 'rejected';
         this._value = data;
-
+        // this._callHandlers();
     }
 
 };
 
 $Promise.prototype.then = function(success, error) {
     var successCb, errorCb;
+    // var newPromise = new $Promise();
     if (typeof success === 'function') {
         successCb = success;
     } else {
@@ -47,9 +48,26 @@ $Promise.prototype.then = function(success, error) {
     } else {
         errorCb = null;
     }
-    this._handlerGroups.push({ successCb, errorCb });
+    this._handlerGroups.push({ successCb:successCb , errorCb:errorCb });
+
+    // this._callHandlers();
+
 };
 
+$Promise.prototype._callHandlers = function (){
+
+
+    for (var i=0;i<this._handlerGroups.length;i++){
+
+    var success = this._handlerGroups[i].successCb;
+    console.log(this._handlerGroups.length);
+    if (typeof success === 'function'){
+        success(this._value);
+
+    }
+
+    }
+};
 /*-------------------------------------------------------
 The spec was designed to work with Test'Em, so we don't
 actually use module.exports. But here it is for reference:
