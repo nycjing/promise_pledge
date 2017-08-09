@@ -230,7 +230,7 @@ describe('The executor function', function(){
     expect( executor ).toHaveBeenCalled();
   });
 
-  xit('gets called with two different functions (funception!), resolve and reject', function(){
+  it('gets called with two different functions (funception!), resolve and reject', function(){
     var promise = new $Promise(executor); // eslint-disable-line no-unused-vars
     var argsPassedIntoExecutor = executor.calls.argsFor(0);
 
@@ -249,7 +249,7 @@ describe('The executor function', function(){
     // like "cannot read X of undefined". Think carefully; you may have an
     // issue with *context* (the `this` keyword).
 
-    xit('resolves the promise', function(){
+    it('resolves the promise', function(){
       var promise = new $Promise(function (resolve) {
         resolve('WinGARdium leviOHsa.');
       });
@@ -262,7 +262,7 @@ describe('The executor function', function(){
     // After all, you worked so hard to make sure `._internalResolve` and
     // `._internalReject` work properly.
 
-    xit('is indistinguishable in behavior from `._internalResolve`', function () {
+    it('is indistinguishable in behavior from `._internalResolve`', function () {
       var resolver;
       var promise = new $Promise(function (resolve) {
         resolve('Use the promise machinery, Luke.');
@@ -283,7 +283,7 @@ describe('The executor function', function(){
 
     // Yet again, resolution and rejection are basically the same.
 
-    xit('rejects the promise', function(){
+    it('rejects the promise', function(){
       var promise = new $Promise(function (resolve, reject) {
         reject('Stupefy!');
       });
@@ -291,7 +291,7 @@ describe('The executor function', function(){
       expect( promise._value ).toBe( 'Stupefy!' );
     });
 
-    xit('is indistinguishable in behavior from `._internalReject`', function () {
+    it('is indistinguishable in behavior from `._internalReject`', function () {
       var rejector;
       var promise = new $Promise(function (resolve, reject) {
         reject('You must unlearn what you have learned.');
@@ -310,7 +310,7 @@ describe('The executor function', function(){
 
   // This part should pass if you did the above correctly. Follow the logic:
 
-  xit('therefore allows the *creator* of a new promise to control its fate, even asynchronously!', function (done) {
+  it('therefore allows the *creator* of a new promise to control its fate, even asynchronously!', function (done) {
 
     var promise3 = new $Promise(function (resolve) {
       setTimeout(function runsInTheFuture () {
