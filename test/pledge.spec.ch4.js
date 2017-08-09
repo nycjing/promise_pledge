@@ -128,7 +128,7 @@ describe('For a given promiseA (pA)', function(){
       expect( promiseB ).toRejectWith( 'shade', done );
     }, FAST_TIMEOUT);
 
-    xit("if pA's error handler throws a reason `e`, pB is rejected with `e`", function (done) {
+    it("if pA's error handler throws a reason `e`, pB is rejected with `e`", function (done) {
       var promiseB = promiseA.catch( thisThrowsShade );
       promiseA._internalReject();
       expect( promiseB ).toRejectWith( 'shade', done );
@@ -139,7 +139,7 @@ describe('For a given promiseA (pA)', function(){
     // Instead, we want to make promiseB to "become" pZ by copying
     // pZ's behavior — aka assimilation. These four tests are brain-benders.
 
-    xit("if pA's success handler returns promiseZ which fulfills, pB mimics pZ", function (done) {
+    it("if pA's success handler returns promiseZ which fulfills, pB mimics pZ", function (done) {
       var promiseZ = new $Promise(noop);
       var promiseB = promiseA.then(function(){
         return promiseZ;
