@@ -73,7 +73,7 @@ describe('For a given promiseA (pA)', function(){
 
     // Fulfillment bubbles down to the first available success handler.
 
-    xit("if pA is fulfilled but has no success handler, pB is fulfilled with pA's value", function (done) {
+    it("if pA is fulfilled but has no success handler, pB is fulfilled with pA's value", function (done) {
       var promiseB = promiseA.then();
       promiseA._internalResolve( 9001 );
       // Do not set state manually; a resolver should be called somewhere.
@@ -86,7 +86,7 @@ describe('For a given promiseA (pA)', function(){
 
     // Rejection bubbles down to the first available error handler.
 
-    xit("if pA is rejected but has no error handler, pB is rejected with pA's reason", function (done) {
+    it("if pA is rejected but has no error handler, pB is rejected with pA's reason", function (done) {
       var promiseB = promiseA.then();
       promiseA._internalReject( 'darn' );
       // Do not set state manually; a rejector should be called somewhere.

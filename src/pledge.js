@@ -48,16 +48,18 @@ $Promise.prototype.then = function (success, error) {
     } else {
         errorCb = null;
     }
-    var downstreamPromise = new $Promise(()=>{});
+    var downstreamPromise = new $Promise(function(){});
     this._handlerGroups.push({successCb: successCb, errorCb: errorCb, downstreamPromise});
-
+    console.log('----',this._handlerGroups);
     this._callHandlers();
+    return downstreamPromise;
 
 };
 
 
 $Promise.prototype.catch = function (error) {
-    this.then(null,error);
+
+    return this.then(null,error);
 
 };
 
@@ -80,6 +82,9 @@ $Promise.prototype._callHandlers = function () {
             {
             if (typeof handler.errorCb === 'function') {
                 handler.errorCb(this._value)
+            }
+            else{
+                handler.downstreamPromise._internalResolve(this._value)
             }
             }
     })
