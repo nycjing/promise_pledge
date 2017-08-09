@@ -71,7 +71,12 @@ $Promise.prototype._callHandlers = function () {
             if(this._state === 'fulfilled')
              {
                 if (typeof handler.successCb === 'function') {
-                handler.successCb(this._value)
+                    var promiseAResult= handler.successCb(this._value);
+                    // if(????)
+                    handler.downstreamPromise._internalResolve(promiseAResult);
+                    // else(
+                    //     handler.downstreamPromise._internalReject(promiseAResult)
+                    // )
                 }
                 else{
                     handler.downstreamPromise._internalResolve(this._value)
@@ -81,10 +86,13 @@ $Promise.prototype._callHandlers = function () {
               if(this._state === 'rejected')
             {
             if (typeof handler.errorCb === 'function') {
-                handler.errorCb(this._value)
+               var promiseAResult = handler.errorCb(this._value);
+
+                handler.downstreamPromise._internalResolve(promiseAResult)
+
             }
             else{
-                handler.downstreamPromise._internalResolve(this._value)
+                handler.downstreamPromise._internalReject(this._value)
             }
             }
     })
