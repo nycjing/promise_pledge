@@ -50,23 +50,25 @@ $Promise.prototype.then = function(success, error) {
     }
     this._handlerGroups.push({ successCb:successCb , errorCb:errorCb });
 
-    // this._callHandlers();
+     this._callHandlers();
 
 };
 
 $Promise.prototype._callHandlers = function (){
+    if (this._state === 'pending') return
 
+    this._handlerGroups.forEach(handler => {
 
-    for (var i=0;i<this._handlerGroups.length;i++){
+        const {successCb, errorC} = handler
 
-    var success = this._handlerGroups[i].successCb;
-    console.log(this._handlerGroups.length);
-    if (typeof success === 'function'){
-        success(this._value);
+        if (this._state === 'fulfilled')
+    {
 
-    }
-
-    }
+        // 1. Fulfilled, no success handler
+        if (typeof successCb === 'function') {
+            successCb(this._value)
+        }
+    }})
 };
 /*-------------------------------------------------------
 The spec was designed to work with Test'Em, so we don't
