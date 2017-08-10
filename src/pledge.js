@@ -50,7 +50,7 @@ $Promise.prototype.then = function (success, error) {
     }
     var downstreamPromise = new $Promise(function(){});
     this._handlerGroups.push({successCb: successCb, errorCb: errorCb, downstreamPromise});
-    console.log('----',this._handlerGroups);
+
     this._callHandlers();
     return downstreamPromise;
 
@@ -61,6 +61,36 @@ $Promise.prototype.catch = function (error) {
 
     return this.then(null,error);
 
+};
+
+$Promise.resolve = function (value) {
+     var newPromise = new $Promise(()=>{});
+     if (value instanceof $Promise) {
+         return value;
+     }
+    newPromise._internalResolve(value);
+    return newPromise;
+};
+
+$Promise.all = function(value){
+    console.log(typeof value);
+    var results =[];
+    var total = value.length;
+    var completed = 0;
+    if (!Array.isArray(value)) throw new TypeError('need an array');
+    return new $Promise(function (resolve, reject) {
+        value.forEach((item, idx) => {
+            $Promise.resolve(item)
+            .then((val) => {
+            results[idx] = val;
+            if (++completed === total) resolve(results);
+            })
+            .catch(function (err) {
+                 reject(err);
+            });
+        })
+
+    })
 };
 
 $Promise.prototype._callHandlers = function () {
