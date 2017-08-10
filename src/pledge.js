@@ -73,7 +73,19 @@ $Promise.prototype._callHandlers = function () {
                 if (typeof handler.successCb === 'function') {
                     try{
                         var promiseAResult= handler.successCb(this._value);
-                        handler.downstreamPromise._internalResolve(promiseAResult);
+                        if (promiseAResult instanceof $Promise ){
+                            promiseAResult.then((value,reseaon)=>{
+                                handler.downstreamPromise._internalResolve(value),
+                                handler.downstreamPromise._internalReject(reseaon)
+
+                            }).catch((error)=>{
+                                handler.downstreamPromise._internalReject(error)
+                            })
+
+                        }
+                        else
+
+                            handler.downstreamPromise._internalResolve(promiseAResult);
                     }
                     catch(err){
                         handler.downstreamPromise._internalReject(err);
@@ -90,6 +102,18 @@ $Promise.prototype._callHandlers = function () {
             if (typeof handler.errorCb === 'function') {
                 try {
                     var promiseAResult = handler.errorCb(this._value);
+                    if (promiseAResult instanceof $Promise ){
+                        promiseAResult.then((value,reseaon)=>{
+                            handler.downstreamPromise._internalResolve(value),
+                            handler.downstreamPromise._internalReject(reseaon)
+
+                    }).catch((error)=>{
+                            handler.downstreamPromise._internalReject(error)
+                    })
+
+                    }
+                    else
+
                     handler.downstreamPromise._internalResolve(promiseAResult)
                 }
                 catch(err){
